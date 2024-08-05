@@ -5,7 +5,7 @@ on:
 
 permissions:
   packages: write
-  contents: read
+  contents: write
 
 jobs:
   build-and-push-docker-image:
@@ -20,6 +20,10 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: 'stable'
+
+      - uses: go-semantic-release/action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup ko
         uses: ko-build/setup-ko@v0.6
