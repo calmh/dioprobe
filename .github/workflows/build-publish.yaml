@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Go
         uses: actions/setup-go@v4
@@ -37,6 +39,16 @@ jobs:
 
       - name: Build containers
         run: |
-          ko build --bare --sbom=none .
+          git fetch --tags
+          descr=$(git describe --tags)
+          short=$(git describe --tags --abbrev=0)
+          if [[ $descr == $short ]]; then
+            v="${short#v}"
+            minor="${v#*.}"
+            major="${v%%.*}"
+            ko build --bare --sbom=none -t latest -t "$v" -t "$minor" -t "$major" .
+          else
+            ko build --bare --sbom=none -t edge .
+          fi
         env:
           KO_DOCKER_REPO: ghcr.io/calmh/dioprobe
