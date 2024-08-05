@@ -46,7 +46,7 @@ jobs:
             v="${short#v}"
             minor="${v#*.}"
             major="${v%%.*}"
-            ko build --bare --sbom=none -t latest -t "$v" -t "$minor" -t "$major" .
+            ko build --bare --sbom=none -t edge -t latest -t "$v" -t "$minor" -t "$major" .
           else
             ko build --bare --sbom=none -t edge .
           fi
