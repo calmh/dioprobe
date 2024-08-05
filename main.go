@@ -27,6 +27,9 @@ func main() {
 
 	prometheus.MustRegister(&dioprobe{*path})
 	http.Handle("/metrics", promhttp.Handler())
+	http.Handle("/healthz", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
 	slog.Error("http", "error", http.ListenAndServe(*addr, nil))
 }
 
